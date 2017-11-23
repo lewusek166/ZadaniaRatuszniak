@@ -1,4 +1,5 @@
-﻿namespace Biblioteczka
+﻿
+namespace Biblioteczka
 {
     partial class frmBiblioteczka
     {
@@ -31,6 +32,7 @@
             this.lbKsiazki = new System.Windows.Forms.ListBox();
             this.btnDodaj = new System.Windows.Forms.Button();
             this.btnUsun = new System.Windows.Forms.Button();
+            this.colorDialog1 = new System.Windows.Forms.ColorDialog();
             this.SuspendLayout();
             // 
             // lbKsiazki
@@ -41,6 +43,7 @@
             this.lbKsiazki.Name = "lbKsiazki";
             this.lbKsiazki.Size = new System.Drawing.Size(217, 68);
             this.lbKsiazki.TabIndex = 0;
+            
             // 
             // btnDodaj
             // 
@@ -50,6 +53,7 @@
             this.btnDodaj.TabIndex = 1;
             this.btnDodaj.Text = "Dodaj";
             this.btnDodaj.UseVisualStyleBackColor = true;
+            this.btnDodaj.Click += new System.EventHandler(this.btnDodaj_Click);
             // 
             // btnUsun
             // 
@@ -79,6 +83,7 @@
         private System.Windows.Forms.ListBox lbKsiazki;
         private System.Windows.Forms.Button btnDodaj;
         private System.Windows.Forms.Button btnUsun;
+        private System.Windows.Forms.ColorDialog colorDialog1;
     }
 }
 

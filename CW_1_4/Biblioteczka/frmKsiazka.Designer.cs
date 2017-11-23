@@ -28,14 +28,17 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.Label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
-            this.textBox1 = new System.Windows.Forms.TextBox();
-            this.textBox2 = new System.Windows.Forms.TextBox();
-            this.textBox3 = new System.Windows.Forms.TextBox();
-            this.button1 = new System.Windows.Forms.Button();
-            this.button2 = new System.Windows.Forms.Button();
+            this.tbxAutor = new System.Windows.Forms.TextBox();
+            this.tbxTytul = new System.Windows.Forms.TextBox();
+            this.btnDodaj = new System.Windows.Forms.Button();
+            this.btnAnuluj = new System.Windows.Forms.Button();
+            this.nudStron = new System.Windows.Forms.TextBox();
+            this.ksiazkaBindingSource = new System.Windows.Forms.BindingSource(this.components);
+            ((System.ComponentModel.ISupportInitialize)(this.ksiazkaBindingSource)).BeginInit();
             this.SuspendLayout();
             // 
             // Label1
@@ -46,7 +49,6 @@
             this.Label1.Size = new System.Drawing.Size(46, 17);
             this.Label1.TabIndex = 0;
             this.Label1.Text = "Autor:";
-            this.Label1.Click += new System.EventHandler(this.label1_Click);
             // 
             // label2
             // 
@@ -66,70 +68,74 @@
             this.label3.TabIndex = 2;
             this.label3.Text = "Stron:";
             // 
-            // textBox1
+            // tbxAutor
             // 
-            this.textBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            this.tbxAutor.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.textBox1.Location = new System.Drawing.Point(104, 46);
-            this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(205, 22);
-            this.textBox1.TabIndex = 3;
+            this.tbxAutor.Location = new System.Drawing.Point(104, 46);
+            this.tbxAutor.Name = "tbxAutor";
+            this.tbxAutor.Size = new System.Drawing.Size(205, 22);
+            this.tbxAutor.TabIndex = 3;
             // 
-            // textBox2
+            // tbxTytul
             // 
-            this.textBox2.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            this.tbxTytul.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.textBox2.Location = new System.Drawing.Point(104, 93);
-            this.textBox2.Name = "textBox2";
-            this.textBox2.Size = new System.Drawing.Size(205, 22);
-            this.textBox2.TabIndex = 4;
+            this.tbxTytul.Location = new System.Drawing.Point(104, 93);
+            this.tbxTytul.Name = "tbxTytul";
+            this.tbxTytul.Size = new System.Drawing.Size(205, 22);
+            this.tbxTytul.TabIndex = 4;
             // 
-            // textBox3
+            // btnDodaj
             // 
-            this.textBox3.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.textBox3.Location = new System.Drawing.Point(104, 142);
-            this.textBox3.Name = "textBox3";
-            this.textBox3.Size = new System.Drawing.Size(205, 22);
-            this.textBox3.TabIndex = 5;
-            this.textBox3.WordWrap = false;
+            this.btnDodaj.Location = new System.Drawing.Point(44, 193);
+            this.btnDodaj.Name = "btnDodaj";
+            this.btnDodaj.Size = new System.Drawing.Size(97, 34);
+            this.btnDodaj.TabIndex = 6;
+            this.btnDodaj.Text = "Dodaj";
+            this.btnDodaj.UseVisualStyleBackColor = true;
+            this.btnDodaj.Click += new System.EventHandler(this.btnDodaj_Click);
             // 
-            // button1
+            // btnAnuluj
             // 
-            this.button1.Location = new System.Drawing.Point(44, 193);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(75, 23);
-            this.button1.TabIndex = 6;
-            this.button1.Text = "button1";
-            this.button1.UseVisualStyleBackColor = true;
+            this.btnAnuluj.Location = new System.Drawing.Point(222, 193);
+            this.btnAnuluj.Name = "btnAnuluj";
+            this.btnAnuluj.Size = new System.Drawing.Size(87, 34);
+            this.btnAnuluj.TabIndex = 7;
+            this.btnAnuluj.Text = "Anuluj";
+            this.btnAnuluj.UseVisualStyleBackColor = true;
+            this.btnAnuluj.Click += new System.EventHandler(this.btnAnuluj_Click);
             // 
-            // button2
+            // nudStron
             // 
-            this.button2.Location = new System.Drawing.Point(234, 193);
-            this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(75, 23);
-            this.button2.TabIndex = 7;
-            this.button2.Text = "button2";
-            this.button2.UseVisualStyleBackColor = true;
+            this.nudStron.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.ksiazkaBindingSource, "IloscStron", true, System.Windows.Forms.DataSourceUpdateMode.OnValidation, "0", "N2"));
+            this.nudStron.Location = new System.Drawing.Point(104, 142);
+            this.nudStron.Name = "nudStron";
+            this.nudStron.Size = new System.Drawing.Size(205, 22);
+            this.nudStron.TabIndex = 8;
+            // 
+            // ksiazkaBindingSource
+            // 
+            this.ksiazkaBindingSource.DataSource = typeof(Dane.Ksiazka);
             // 
             // frmKsiazka
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(451, 239);
-            this.Controls.Add(this.button2);
-            this.Controls.Add(this.button1);
-            this.Controls.Add(this.textBox3);
-            this.Controls.Add(this.textBox2);
-            this.Controls.Add(this.textBox1);
+            this.Controls.Add(this.nudStron);
+            this.Controls.Add(this.btnAnuluj);
+            this.Controls.Add(this.btnDodaj);
+            this.Controls.Add(this.tbxTytul);
+            this.Controls.Add(this.tbxAutor);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.Label1);
             this.Name = "frmKsiazka";
             this.Text = "frmKsiazka";
+            ((System.ComponentModel.ISupportInitialize)(this.ksiazkaBindingSource)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -140,10 +146,11 @@
         private System.Windows.Forms.Label Label1;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label3;
-        private System.Windows.Forms.TextBox textBox1;
-        private System.Windows.Forms.TextBox textBox2;
-        private System.Windows.Forms.TextBox textBox3;
-        private System.Windows.Forms.Button button1;
-        private System.Windows.Forms.Button button2;
+        private System.Windows.Forms.TextBox tbxAutor;
+        private System.Windows.Forms.TextBox tbxTytul;
+        private System.Windows.Forms.Button btnDodaj;
+        private System.Windows.Forms.Button btnAnuluj;
+        private System.Windows.Forms.TextBox nudStron;
+        private System.Windows.Forms.BindingSource ksiazkaBindingSource;
     }
 }
