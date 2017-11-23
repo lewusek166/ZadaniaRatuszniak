@@ -63,14 +63,14 @@ void przygotowanie_danych(Ramka ramka) {
 	}
 	
 
-void Serializacja() {
+void Serializacja(Ramka ramka) {
 //zapis do pliku bo nie wiem do konca jakiego strumienia u¿yæ
 	//najpewniej strumienia z klasy serial Port
 	FileStream^ file = gcnew FileStream("DataFile.dat", FileMode::Create);
 	BinaryFormatter^ formater = gcnew BinaryFormatter;
 	try
 	{
-		formater->Serialize(file, zmienna_zdanymi);///tutaj nie wiem czy byte czy char
+		formater->Serialize(file, ramka.AdresUrzadzenia+ramka);
 	}
 	catch (SerializationException^ e)
 	{
@@ -86,7 +86,7 @@ void deserializacja() {
 	BinaryFormatter^ formater = gcnew BinaryFormatter;
 	try
 	{
-		formater->Serialize(file, zmienna_zdanymi);///tutaj nie wiem czy byte czy char
+		formater->Deserialize(file, zmienna_zdanymi);
 	}
 	catch (SerializationException^ e)
 	{
