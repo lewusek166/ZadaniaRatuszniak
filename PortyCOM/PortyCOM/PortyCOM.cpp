@@ -8,78 +8,121 @@ using namespace System;
 using namespace System::IO::Ports;
 using namespace System::Threading;
 
+
+#pragma pack(1)
+typedef struct Ramka
+{
+
+	unsigned __int8  AdresUrzadzenia;
+	unsigned __int16  Nr_komendy;
+	unsigned __int16  Info_Ilosc_danych;
+	unsigned __int8 dane[9];//dane nie beda wysylane i slave na nie ma nie czekac 
+	unsigned __int16 Wartosc_Ustaona;
+	unsigned __int16  Suma_kontrolna;
+
+};
+
+
+void ustawienia(Ramka ramka) {
+	
+	ramka.AdresUrzadzenia = 0xff;
+	ramka.Nr_komendy = 0xC824;
+	ramka.Info_Ilosc_danych = 0;
+	ramka.dane[0] = 0;
+	ramka.dane[1] = 0;
+	ramka.dane[2] = 0;
+	ramka.dane[3] = 0;
+	ramka.dane[4] = 0;
+	ramka.dane[5] = 0;
+	ramka.dane[6] = 0;
+	ramka.dane[7] = 0;
+	ramka.dane[8] = 0;
+	ramka.Wartosc_Ustaona = 0xA55A;
+	ramka.Suma_kontrolna =
+		ramka.AdresUrzadzenia |
+		ramka.Nr_komendy |
+		ramka.Info_Ilosc_danych |
+		ramka.dane[0] | ramka.dane[1] | ramka.dane[2] | //dodawanie bitowe
+		ramka.dane[3] | ramka.dane[4] | ramka.dane[5] |
+		ramka.dane[6] | ramka.dane[7] | ramka.dane[8] |
+		ramka.Wartosc_Ustaona;
+}
+
+
 public ref class PortChat
 {
 private:
 	static bool _continue;
 	static SerialPort^ _serialPort;
-
+	
 public:
-	static void Main()
+	
+	void DaneDoWyslaniaZapytanie(
+		unsigned __int8 Adres,
+		unsigned __int8 Komenda,
+		unsigned __int8 info,
+		unsigned __int8 Wartosc,
+		unsigned __int8 suma);
+	static void PortCom();
+	static String^ SetPortName(String^ defaultPortName);
+	static void Read();
+	
+
+};
+
+
+void PortChat::DaneDoWyslaniaZapytanie(unsigned __int8 Adres, unsigned __int8 Komenda, unsigned __int8 info, unsigned __int8 Wartosc, unsigned __int8 suma)
+{	
+	Adres =
+}
+
+void PortChat::PortCom()
+{
+
+
+	ustawienia();
+
+	String^ message;
+	StringComparer^ stringComparer = StringComparer::OrdinalIgnoreCase;
+	Thread^ readThread = gcnew Thread(gcnew ThreadStart(PortChat::Read));
+	//ustawienia portu szeregowego
+	_serialPort = gcnew SerialPort();
+	_serialPort->PortName = SetPortName(_serialPort->PortName);
+	_serialPort->ReadTimeout = 500;
+	_serialPort->WriteTimeout = 500;
+	_serialPort->Open();
+	_continue = true;
+	readThread->Start();
+
+
+
+	Console::WriteLine("Type QUIT to exit");
+
+	while (_continue)
 	{
-		
-		
-		String^ message;
-		StringComparer^ stringComparer = StringComparer::OrdinalIgnoreCase;
-		Thread^ readThread = gcnew Thread(gcnew ThreadStart(PortChat::Read));
+		message = Console::ReadLine();
 
-		// Create a new SerialPort object with default settings.
-		_serialPort = gcnew SerialPort();
-
-		// Allow the user to set the appropriate properties.
-		_serialPort->PortName = SetPortName(_serialPort->PortName);
-		_serialPort->BaudRate = SetPortBaudRate(_serialPort->BaudRate);
-		_serialPort->Parity = SetPortParity(_serialPort->Parity);
-		_serialPort->DataBits = SetPortDataBits(_serialPort->DataBits);
-		_serialPort->StopBits = SetPortStopBits(_serialPort->StopBits);
-		_serialPort->Handshake = SetPortHandshake(_serialPort->Handshake);
-
-		// Set the read/write timeouts
-		_serialPort->ReadTimeout = 500;
-		_serialPort->WriteTimeout = 500;
-
-		_serialPort->Open();
-		_continue = true;
-		readThread->Start();
-
-		
-
-		Console::WriteLine("Type QUIT to exit");
-
-		while (_continue)
+		if (stringComparer->Equals("quit", message))
 		{
-			message = Console::ReadLine();
-
-			if (stringComparer->Equals("quit", message))
-			{
-				_continue = false;
-			}
-			else
-			{
-				String^ dane=  message;
-				_serialPort->Write  (dane);///zmiana z wirtline na write
-			}
+			_continue = false;
 		}
-
-		readThread->Join();
-		_serialPort->Close();
-	}
-
-	static void Read()
-	{
-		while (_continue)
+		else
 		{
-			try
-			{
-				String^ message = _serialPort->ReadLine();
-				Console::WriteLine(message);
-			}
-			catch (TimeoutException ^) {}
+
+			_serialPort->Write(ramka.AdresUrzadzenia +
+				ramka.Nr_komendy +
+				ramka.Info_Ilosc_danych +
+			);
 		}
 	}
 
-	static String^ SetPortName(String^ defaultPortName)
-	{
+	readThread->Join();
+	_serialPort->Close();
+}
+
+String ^ PortChat::SetPortName(String ^ defaultPortName)
+{
+	
 		String^ portName;
 
 		Console::WriteLine("Available Ports:");
@@ -98,102 +141,26 @@ public:
 		return portName;
 	}
 
-	static Int32 SetPortBaudRate(Int32 defaultPortBaudRate)
-	{
-		String^ baudRate;
-
-		Console::Write("Baud Rate(default:{0}): ", defaultPortBaudRate);
-		baudRate = Console::ReadLine();
-
-		if (baudRate == "")
+void PortChat::Read()
+{
+	
+		while (_continue)
 		{
-			baudRate = defaultPortBaudRate.ToString();
+			try
+			{
+				String^ message = _serialPort->ReadLine();
+				Console::WriteLine(message);
+			}
+			catch (TimeoutException ^) {}
 		}
-
-		return Int32::Parse(baudRate);
 	}
 
-	static Parity SetPortParity(Parity defaultPortParity)
-	{
-		String^ parity;
 
-		Console::WriteLine("Available Parity options:");
-		for each (String^ s in Enum::GetNames(Parity::typeid))
-		{
-			Console::WriteLine("   {0}", s);
-		}
-
-		Console::Write("Enter Parity value (Default: {0}):", defaultPortParity.ToString());
-		parity = Console::ReadLine();
-
-		if (parity == "")
-		{
-			parity = defaultPortParity.ToString();
-		}
-
-		return (Parity)Enum::Parse(Parity::typeid, parity);
-	}
-
-	static Int32 SetPortDataBits(Int32 defaultPortDataBits)
-	{
-		String^ dataBits;
-
-		Console::Write("Enter DataBits value (Default: {0}): ", defaultPortDataBits);
-		dataBits = Console::ReadLine();
-
-		if (dataBits == "")
-		{
-			dataBits = defaultPortDataBits.ToString();
-		}
-
-		return Int32::Parse(dataBits);
-	}
-
-	static StopBits SetPortStopBits(StopBits defaultPortStopBits)
-	{
-		String^ stopBits;
-
-		Console::WriteLine("Available Stop Bits options:");
-		for each (String^ s in Enum::GetNames(StopBits::typeid))
-		{
-			Console::WriteLine("   {0}", s);
-		}
-
-		Console::Write("Enter StopBits value (None is not supported and \n" +
-			"raises an ArgumentOutOfRangeException. \n (Default: {0}):", defaultPortStopBits.ToString());
-		stopBits = Console::ReadLine();
-
-		if (stopBits == "")
-		{
-			stopBits = defaultPortStopBits.ToString();
-		}
-
-		return (StopBits)Enum::Parse(StopBits::typeid, stopBits);
-	}
-
-	static Handshake SetPortHandshake(Handshake defaultPortHandshake)
-	{
-		String^ handshake;
-
-		Console::WriteLine("Available Handshake options:");
-		for each (String^ s in Enum::GetNames(Handshake::typeid))
-		{
-			Console::WriteLine("   {0}", s);
-		}
-
-		Console::Write("Enter Handshake value (Default: {0}):", defaultPortHandshake.ToString());
-		handshake = Console::ReadLine();
-
-		if (handshake == "")
-		{
-			handshake = defaultPortHandshake.ToString();
-		}
-
-		return (Handshake)Enum::Parse(Handshake::typeid, handshake);
-	}
-};
 
 int main()
 {
-	PortChat::Main();
+	PortChat::PortCom();
 }
+
+
+

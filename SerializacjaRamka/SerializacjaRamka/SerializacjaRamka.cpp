@@ -26,6 +26,9 @@ void Rozmiar_Typow() {
 	std::cout << "sizeof(float) = " << sizeof(float) << std::endl;
 	std::cout << "sizeof(double) = " << sizeof(double) << std::endl;
 	std::cout << "sizeof(long double) = " << sizeof(long double) << std::endl;
+	Byte test = 0xff;
+	std::cout << "test byte" << test << std::endl;
+
 
 }
 
@@ -33,13 +36,13 @@ void Rozmiar_Typow() {
 typedef struct Ramka
 {
 	//wielkoœæ poszczególnych komórek ramki ????	
-	Byte  AdresUrzadzenia;	   //int AdresUrzadzenia;		 
-	Byte  Info_Ilosc_danych[1];   //int Info_Ilosc_danych;	 
-	Byte  Wartosc_Ustaona[1];     //int Wartosc_Ustaona;		 
-	Byte  Nr_komendy[1];          //int Nr_komendy;			
-	Byte  ilosc_bajtow_danych[1];  //int ilosc_bajtow_danych;	 
-	Byte  Suma_kontrolna;       //int Suma_kontrolna;
-
+	Byte  AdresUrzadzenia;	   	 //lub __int8
+	Byte  Info_Ilosc_danych[1];    //lub __int16
+	Byte  Wartosc_Ustaona[1];     		 
+	Byte  Nr_komendy[1];         
+	Byte  ilosc_bajtow_danych[1];  	 
+	Byte  Suma_kontrolna;       
+	
 }Ramka;
 
 
@@ -66,7 +69,7 @@ void przygotowanie_danych(Ramka ramka) {
 void Serializacja(Ramka ramka) {
 //zapis do pliku bo nie wiem do konca jakiego strumienia u¿yæ
 	//najpewniej strumienia z klasy serial Port
-	FileStream^ file = gcnew FileStream("DataFile.dat", FileMode::Create);
+/*	FileStream^ file = gcnew FileStream("DataFile.dat", FileMode::Create);
 	BinaryFormatter^ formater = gcnew BinaryFormatter;
 	try
 	{
@@ -76,13 +79,13 @@ void Serializacja(Ramka ramka) {
 	{
 		file->Close();
 			
-	}
+	}*/
  
 }
 ////po stronie slave to smo musi byc 
 void deserializacja() {
 
-	FileStream^ file = gcnew FileStream("DataFile.dat", FileMode::Open);
+	/*FileStream^ file = gcnew FileStream("DataFile.dat", FileMode::Open);
 	BinaryFormatter^ formater = gcnew BinaryFormatter;
 	try
 	{
@@ -92,7 +95,7 @@ void deserializacja() {
 	{
 		file->Close();
 
-	}
+	}*/
 }
 
 
@@ -100,8 +103,7 @@ void deserializacja() {
 
 int main()
 {
-	Ramka* nowaRamka = new Ramka;
-	nowaRamka->AdresUrzadzenia = 0xFF;
+	Rozmiar_Typow();
 	
 
 	
